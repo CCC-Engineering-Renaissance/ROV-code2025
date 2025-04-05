@@ -1,14 +1,17 @@
-a.out: main.o thruster.o controller.o
-	g++ main.o -llgpio -lSDL2
+a.out: out/main.o out/pca9685.o
+	g++ out/main.o out/pca9685.o -llgpio -lSDL2
 
-main.o: main.cpp
-	g++ -c main.cpp
+out/main.o: src/main.cpp
+	g++ -o out/main.o -c -I ./include src/main.cpp
 
-thruster.o: thruster.cpp
-	g++ -c thruster.cpp
+out/pca9685.o: include/pca9685.cpp include/pca9685.h
+	g++ -o out/pca9685.o -c include/pca9685.cpp
 
-controller.o: controller.cpp
-	g++ -c controller.cpp
+out/thruster.o: include/thruster.cpp
+	g++ -o out/pca9685.o -c include/thruster.cpp
+
+out/controller.o: include/controller.cpp
+	g++ -o out/controller.o -c include/controller.cpp
 
 clean:
 	rm *.o
