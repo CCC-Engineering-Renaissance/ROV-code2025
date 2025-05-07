@@ -1,6 +1,7 @@
 #include "pca9685.h"
 #include <unistd.h>
 #include <cmath>
+#include <iostream>
 
 pca9685::pca9685(){
 	address = 0x40;
@@ -22,8 +23,7 @@ void pca9685::setFrequency(int freq){
 	lgI2cWriteByteData(handle, 0x00, thing | 0x80);
 }
 void pca9685::setPWM(int pin, uint16_t signal){
-	uint16_t freq = (482.0 / 1500.0) * signal;
-	//uint16_t freq = signal;
+	uint16_t freq = (306.0 / 1500.0) * signal;
 
 	lgI2cWriteByteData(handle, 0x06 + 4 * pin, 0);
 	lgI2cWriteByteData(handle, 0x06 + 4 * pin + 1, 0);

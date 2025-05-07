@@ -3,9 +3,14 @@
 #include <lgpio.h>
 #include <thread>
 #include <cmath>
+#include <vector>
+#include <string>
+#include <Eigen/Dense>
+#include <Eigen/QR>
 
 #include "pca9685.h"
 #include "xbox.h"
+#include "matrix.h"
 using namespace std;
 
 
@@ -19,80 +24,78 @@ const int LFLAGS = 0;
 double power = 0.5;
 bool thing = true;
 
-int h;
+int h = lgGpiochipOpen(0); 
+pca9685 driver;
+vector<bool> thrusts(10, true);
+
 uint16_t  lerp(uint16_t a, uint16_t b, float t){
 	return a + t * (b - a);
 }
-class Thruster{
-	int pin;
-	thread t;
 
-	public:
-	Thruster(){}
-	Thruster(int newPin){pin = newPin; t = thread(this->loop, pin);}
+void loop(){
+	uint16_t test = 1500;
+	uint16_t back = test;
+	while (isRunning()){
+		double smoothing = 0.8;
 
-	static void loop(int pin){
-		cout << "Bruh" << endl;
-		for (int i = 0; i < 100000; i++){
-			lgTxServo(h, pin, 1500, 50, 0, 0); /* 1500 microseconds, 50 Hz */
+		//Eigen::MatrixXf vals = calcs(state.forward, state.strafe, state.vertical, state.roll, state.pitch, state.yaw);
+
+
+		for (int i = 0; i < 8; i++){
+			if (thrusts.at(i)) {
+				test = 1500 + state.forward * 200;
+				cout << i << ": " << lerp(back, test, smoothing) << "  ";
+				driver.setPWM(i, lerp(back, test, smoothing));
+				//cout << i << ": " << test << "  ";
+				//driver.setPWM(i, test);
+			}
+			else {
+				cout << i << ": DEACTIVATED" << " ";
+				driver.setPWM(i, 1500);
+			}
 		}
-
-		usleep(10000);
-
-		// Send controller signal to thruster
-		while(thing){
-			lgTxServo(h, pin, 1500 + power * 400, 50, 0, 0); /* 1500 microseconds, 50 Hz */
-		}	
+		cout << '\r';
+		cout.flush();
+		back = lerp(back, test, smoothing);
 	}
-
-};
+}
 
 #define PCA9685_ADDR 0x40
 
 int main(){
-	h = lgGpiochipOpen(0); 
 	SDL_Init(SDL_INIT_GAMECONTROLLER); // Initialize SDL
 
 	SDL_GameController* controller = SDL_GameControllerOpen(0); // Get the controller
+	if (!controller) {
+		cout << "No controller detected" << endl;
+		exit(1);
+	}
 
-	pca9685 driver;
-	driver.setFrequency(75);
+	driver.setFrequency(50);
 
+	// Start thread to read controller input
 	thread control(controls1, controller);
-	uint16_t test = 1500;
 
 	for (int i = 0; i < 10; i++){
 		driver.setPWM(i, 1500);
 	}
-
 	usleep(10000);
 
+	// Start thread to send data to thrusters
+	thread thrusters(loop);
 
-	uint16_t back = test;
-
-
+	int num;
 	while (isRunning()){
-		test = 1500 + 400 * state.forward;
-		double smoothing = 0.8;
-		cout << lerp(back, test, smoothing) << '\r';
-		cout.flush();
-			lgTxServo(h, 14, 1000, 50, 0, 0);
-
-			lgTxServo(h, 14, 2000, 50, 0, 0);
-			lgTxServo(h, 14, 1500, 50, 0, 0);
-		for (int i = 0; i < 10; i++){
-			driver.setPWM(i, lerp(back, test, smoothing));
-			//driver.setPWM(i, test);
-		}
-		back = lerp(back, test, smoothing);
-	
+		cin >> num;
+		thrusts.at(num) = !thrusts.at(num);
 	}
 
+	// Join Threads
+	control.join();
+	thrusters.join();
 
-	// Join Thread
-		control.join(); //
-		SDL_GameControllerClose(controller);
-		SDL_Quit();
+	SDL_GameControllerClose(controller);
+	SDL_Quit();
 
 	lgGpiochipClose(h);
 }
