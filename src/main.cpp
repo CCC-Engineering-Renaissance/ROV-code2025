@@ -34,9 +34,10 @@ void loop(){
 		// Get how much power to set each thruster 
 		Eigen::MatrixXf vals = calcs(state.forward * 2, state.strafe * 2, state.vertical * 2, state.roll * 2.5, state.pitch * 2.5, state.yaw * 2.5);
 
-		// Set each Thruster
+		// Set each Thruster's PWM value
 		for (int i = 0; i < 8; i++){
 			if (thrusts.at(i)) {
+				// Calculate PWM value from power
 				float test = 1460 + vals(i) * 250;
 				cout << i << ": " << test << "  ";
 				
@@ -77,7 +78,7 @@ void loop(){
 #define PCA9685_ADDR 0x40
 
 int main(){
-	// Set PWM Freq of the PWM Freq
+	// Set PWM Freq of the driver
 	driver.setFrequency(50);
 
 	// Start server thread
