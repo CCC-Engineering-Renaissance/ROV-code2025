@@ -1,13 +1,10 @@
 #include "pca9685.h"
 #include <unistd.h>
-#include <iostream>
 #include <cmath>
-using namespace std;
 
 pca9685::pca9685(){
 	address = 0x40;
 	handle = lgI2cOpen(1, address, 0);
-	cout << handle << endl;
 	lgI2cWriteByteData(handle, 0x00, 0x00);
 }
 pca9685::pca9685(unsigned char address){
