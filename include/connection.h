@@ -5,6 +5,7 @@
 
 using boost::asio::ip::udp;
 
+// Controller Data
 struct POVState{
 	float forward = 0.0f;
 	float strafe = 0.0f;
@@ -16,32 +17,34 @@ struct POVState{
 	float clawOpen = 0.0f;
 
 } state;
+
 void server() {
-    try {
-        boost::asio::io_context io_context;
+	try {
+		boost::asio::io_context io_context;
 
-        udp::socket socket(io_context, udp::endpoint(udp::v4(), 12345));
-        std::cout << "UDP server is running on port 12345...\n";
+		// Open Socket
+		udp::socket socket(io_context, udp::endpoint(udp::v4(), 12345));
+		for (;;) {
+			// Data Buffer
+			char data[1024];
+			udp::endpoint remote_endpoint;
+			boost::system::error_code error;
 
-        for (;;) {
-            char data[1024];
-            udp::endpoint remote_endpoint;
-            boost::system::error_code error;
+			// Read Data
+			std::size_t length = socket.receive_from(boost::asio::buffer(data), remote_endpoint, 0, error);
+			if (error && error != boost::asio::error::message_size) {
+				throw boost::system::system_error(error);
+			}
 
-            std::size_t length = socket.receive_from(boost::asio::buffer(data), remote_endpoint, 0, error);
-
-            if (error && error != boost::asio::error::message_size) {
-                throw boost::system::system_error(error);
-            }
-
-            //std::cout << "Received from " << remote_endpoint.address().to_string()         << ": " << std::string(data, length) << std::endl;
-		std::string msg(data, length);
-		std::stringstream ss(msg);
+			std::string msg(data, length);
+			std::stringstream ss(msg);
+			
+			// Write Data to the state
 			ss >> state.forward >> state.strafe >> state.vertical >> state.yaw >> state.pitch >> state.roll >> state.clawRotate >> state.clawOpen;
-        }
-    } catch (std::exception& e) {
-        std::cerr << "Server error: " << e.what() << "\n";
-    }
+		}
+	} catch (std::exception& e) {
+		std::cerr << "Server error: " << e.what() << "\n";
+	}
 
 }
 

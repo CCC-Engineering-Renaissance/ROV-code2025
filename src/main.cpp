@@ -1,5 +1,4 @@
 #include <iostream>
-#include <SDL2/SDL.h>
 #include <lgpio.h>
 #include <thread>
 #include <cmath>
@@ -10,112 +9,92 @@
 #include <mqtt/async_client.h>
 
 #include "pca9685.h"
-//#include "xbox.h"
-//#include "mqtt.h"
 #include "connection.h"
 #include "matrix.h"
+#include "thruster.h"
+
 using namespace std;
-
-
-const int THRUSTER1 = 19;
-const int THRUSTER2 = 26;
-const int THRUSTER3 = 13;
-const int THRUSTER4 = 0;
-
 const int LFLAGS = 0;
-
 double power = 0.5;
 bool thing = true;
-
 int h = lgGpiochipOpen(0); 
+
 pca9685 driver;
-vector<bool> thrusts(10, true);
-//vector<int> things = {3, 2, 7, 4, 0, 5, 6, 1};
-//vector<int> things = {3, 2, 7, 4, 0, 5, 6, 1};
+
+vector<bool> thrusts(10,false) ;
 vector<int> things = {4, 1, 7, 0, 3, 6, 5, 2};
+vector<ESC> escs;
 
 uint16_t  lerp(uint16_t a, uint16_t b, float t){
 	return a + t * (b - a);
 }
 
 void loop(){
-	uint16_t test = 1500;
-	uint16_t back = test;
 	while (1){
-		double smoothing = 0.8;
-
-		//Eigen::MatrixXf vals = calcs(state.forward * 2, state.strafe * 2, state.vertical * 2, state.roll * 1.25, state.pitch * 1.25, state.yaw * 1.25);
+		// Get how much power to set each thruster 
 		Eigen::MatrixXf vals = calcs(state.forward * 2, state.strafe * 2, state.vertical * 2, state.roll * 2.5, state.pitch * 2.5, state.yaw * 2.5);
-		//Eigen::MatrixXf vals = calcs(state.forward * 1.1, state.strafe * 1.1, state.vertical * 1.1, state.roll * 1.1, state.pitch * 1.1, state.yaw * 1.1);
-		//cout << vals;
 
-
+		// Set each Thruster
 		for (int i = 0; i < 8; i++){
 			if (thrusts.at(i)) {
-				test = 1460 + vals(i) * 250;
-				if (test >= 1650) test = 1650;
-				if (test <= 1350) test = 1350;
-				//test = vals(i);
-				//cout << i << ": " << lerp(back, test, smoothing) << "  ";
-				//driver.setPWM(i, lerp(back, test, smoothing));
-				//publish(string("thrusters/thruster") + to_string(i), to_string(vals(i)));
+				float test = 1460 + vals(i) * 250;
 				cout << i << ": " << test << "  ";
-				//cout << vals(i) << " ";
-				driver.setPWM(things.at(i), test);
+				
+				escs.at(i).setPower(vals(i), driver);
 			}
 			else {
 				cout << i << ": DEACTIVATED" << " ";
-				driver.setPWM(i, 1460);
+				escs.at(i).setPower(1460, driver);
 			}
 		}
-			if (thrusts.at(8)) {
-				test = 1440 + state.clawRotate * 400;
-				//driver.setPWM(i, lerp(back, test, smoothing));
-				//publish(string("thrusters/thruster") + to_string(8), to_string(test));
-				cout << "Rotate" << ": " << state.clawRotate << "  ";
-				//cout << vals(i) << " ";
-				driver.setPWM(8, test);
-			}
-			else {
-				cout << state.clawRotate << ": DEACTIVATED" << " ";
-				driver.setPWM(8, 0);
-			}
 
-			if (thrusts.at(9)) {
-				test = 1440 + state.clawOpen * 400;
-				//driver.setPWM(i, lerp(back, test, smoothing));
-				//publish(string("thrusters/thruster") + to_string(9), to_string(test));
-				cout << "Open" << ": " << state.clawOpen << "  ";
-				//cout << vals(i) << " ";
-				driver.setPWM(9, test);
-			}
-			else {
-				cout << state.clawOpen << ": DEACTIVATED" << " ";
-				driver.setPWM(9, 0);
-			}
+		// Set Each Claw
+		if (thrusts.at(8)) {
+			float test = 1440 + state.clawRotate * 400;
+			cout << "Rotate" << ": " << state.clawRotate << "  ";
+			driver.setPWM(8, test);
+		}
+		else {
+			cout << state.clawRotate << ": DEACTIVATED" << " ";
+			driver.setPWM(8, 0);
+		}
 
+		if (thrusts.at(9)) {
+			float test = 1440 + state.clawOpen * 400;
+			cout << "Open" << ": " << state.clawOpen << "  ";
+			driver.setPWM(9, test);
+		}
+		else {
+			cout << state.clawOpen << ": DEACTIVATED" << " ";
+			driver.setPWM(9, 0);
+		}
 		cout << '\r';
 		cout.flush();
-		back = lerp(back, test, smoothing);
+
 	}
 }
 
 #define PCA9685_ADDR 0x40
 
 int main(){
+	// Set PWM Freq of the PWM Freq
 	driver.setFrequency(50);
 
-	// Start thread to read controller input
+	// Start server thread
 	thread control(server);
-
-	// Prime Thrusters and Claw
+	
 	for (int i = 0; i < 8; i++){
-		driver.setPWM(i, 1460);
-	}
-	for (int i = 8; i < 10; i++){
-		driver.setPWM(i, 0);
+		ESC esc(things.at(i), 1460, 250);
+		escs.push_back(esc);
+	}	
+
+	// Prime Thrusters 
+	for (int i = 0; i < 8; i++){
+		escs.at(i).setPWM(1460, driver);
 	}
 	usleep(10000);
+
+	// Prime Claw, donald said we cant use a for loop for some reason
 	driver.setPWM(8, 1000);
 	driver.setPWM(8, 2000);
 	driver.setPWM(8, 1460);
@@ -127,6 +106,7 @@ int main(){
 	// Start thread to send data to thrusters
 	thread thrusters(loop);
 
+	// Allows us to turn off and on thrusters
 	int num;
 	while (1){
 		cin >> num;
