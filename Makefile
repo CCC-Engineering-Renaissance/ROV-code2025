@@ -13,8 +13,5 @@ out/thruster.o: include/thruster.cpp
 out/controller.o: include/controller.cpp
 	g++ -g -o out/controller.o -c include/controller.cpp
 
-#clean:
-	rm *.o
-
 clean:
 	rm -f a.out core *.o
