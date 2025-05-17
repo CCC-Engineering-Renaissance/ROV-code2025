@@ -30,7 +30,6 @@ ESC::ESC(int pin, int rest, int offset){
 }
 
 void ESC::setPWM(int val, pca9685 &driver){
-	// setPWM val
 
 	if (val < this->rest - this->offset) val = this->rest - this->offset;
 	else if (val > this->rest + this->offset) val = this->rest + this->offset;
@@ -40,6 +39,7 @@ void ESC::setPWM(int val, pca9685 &driver){
 }
 
 void ESC::setPower(double val, pca9685 &driver){
+	// Limit Vals to -1 to 1
 	if (val < -1) val = -1.0;
 	if (val > 1) val = 1.0;
 	
