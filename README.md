@@ -5,7 +5,7 @@ MATE ROV Code is the foundational software for controlling the ROV. It defines t
 - Eigen3 (Linear Algebra)
 - Boost asio (Server)
 - matrix.h (Calculates Motor Power for Thrusters)
-- thruster.h (Control electronic speed controllers)
+- thruster.h (Control Electronic Speed Controllers)
 ## Running The Code
 ```
 make
