@@ -9,19 +9,18 @@ The code in this repo is clear and easy to read. External links are provided for
 - matrix.h (Calculates Motor Power for Thrusters)
 - thruster.h (Control Electronic Speed Controllers)
 ## Installation Instructions
+Clone Repo:
+git clone https://github.com/CCC-Engineering-Renaissance/ROV-code2025.git
 Install Dependencies:
-- sudo apt update && sudo apt install -y \
-  build-essential cmake git libeigen3-dev libssl-dev \
-  i2c-tools
-- Git Clone External Libraries
-Have proper file setup:
-rov_project/
-.├── main.cpp
-.├── pca9685.h
-.├── connection.h
-.├── matrix.h
-.├── thruster.h
-.├── CMake
+- sudo apt-get update
+- sudo apt-get install libeigen3-dev libboost-all-dev
+- Git Clone External Libraries Provided Below
+cd Into:
+ROV-code2025
+Run:
+make
+./a.out
+
  Run The Code
 ## External Libraries to Pull From GitHub
 - lgpio - GPIO Control Library (https://github.com/joan2937/lg)
