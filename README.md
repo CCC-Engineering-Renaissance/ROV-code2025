@@ -26,7 +26,7 @@ Run:
 make
 ./a.out
 ```
- Run The Code
+Start Submerging 🌊
 ## External Libraries to Pull From GitHub
 - lgpio - GPIO Control Library (https://github.com/joan2937/lg)
 - Eigen - Library for Linear Algebra for C++ (https://gitlab.com/libeigen/eigen/-/releases)
