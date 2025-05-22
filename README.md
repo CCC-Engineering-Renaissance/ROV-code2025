@@ -21,8 +21,8 @@ Git Clone External Libraries Provided Below:
 
 Install Dependencies:
 ```
-- sudo apt-get update
-- sudo apt-get install libeigen3-dev libboost-all-dev
+sudo apt-get update
+sudo apt-get install libeigen3-dev libboost-all-dev
 ```
 Cd Into:
 ```
