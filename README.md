@@ -6,6 +6,10 @@ MATE ROV Code is the foundational software for controlling the ROV. It defines t
 - Boost asio (Server)
 - matrix.h (Calculates Motor Power for Thrusters)
 - thruster.h (Control Electronic Speed Controllers)
+## External Libraries to Pull From GitHub
+- lgpio - GPIO Control Library (https://github.com/joan2937/lg)
+- Eigen - Library for Linear Algebra for C++ (https://gitlab.com/libeigen/eigen/-/releases)
+- Paho MQTT (https://github.com/eclipse-paho/paho.mqtt.cpp)
 ## Running The Code
 ```
 make
