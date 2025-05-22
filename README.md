@@ -11,12 +11,15 @@ The code in this repo is clear and easy to read. External links are provided for
 ## Installation Instructions
 Clone Repo:
 git clone https://github.com/CCC-Engineering-Renaissance/ROV-code2025.git
+
 Install Dependencies:
 - sudo apt-get update
 - sudo apt-get install libeigen3-dev libboost-all-dev
 - Git Clone External Libraries Provided Below
+
 cd Into:
 ROV-code2025
+
 Run:
 make
 ./a.out
