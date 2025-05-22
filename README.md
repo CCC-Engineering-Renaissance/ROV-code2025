@@ -17,14 +17,14 @@ Install Dependencies:
 - sudo apt-get install libeigen3-dev libboost-all-dev
 - Git Clone External Libraries Provided Below
 
-cd Into:
+Cd Into:
 ```
--ROV-code2025
+ROV-code2025
 ```
 Run:
 ```
--make
--./a.out
+make
+./a.out
 ```
  Run The Code
 ## External Libraries to Pull From GitHub
