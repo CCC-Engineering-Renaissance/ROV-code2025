@@ -12,7 +12,11 @@ The code in this repo is clear and easy to read. External links are provided for
 Clone Repo:
 git clone https://github.com/CCC-Engineering-Renaissance/ROV-code2025.git
 
-Git Clone External Libraries Provided Below!!!
+Git Clone External Libraries Provided Below:
+
+- lgpio - GPIO Control Library (https://github.com/joan2937/lg)
+- Eigen - Library for Linear Algebra for C++ (https://gitlab.com/libeigen/eigen/-/releases)
+- Paho MQTT (https://github.com/eclipse-paho/paho.mqtt.cpp)
 
 Install Dependencies:
 ```
@@ -29,12 +33,4 @@ make
 ./a.out
 ```
 Start Submerging 🌊
-## External Libraries to Pull From GitHub
-- lgpio - GPIO Control Library (https://github.com/joan2937/lg)
-- Eigen - Library for Linear Algebra for C++ (https://gitlab.com/libeigen/eigen/-/releases)
-- Paho MQTT (https://github.com/eclipse-paho/paho.mqtt.cpp)
-## Running The Code
-```
-make
-./a.out
-```
+
