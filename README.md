@@ -12,18 +12,20 @@ The code in this repo is clear and easy to read. External links are provided for
 Clone Repo:
 git clone https://github.com/CCC-Engineering-Renaissance/ROV-code2025.git
 
-#Install Dependencies:
+Install Dependencies:
 - sudo apt-get update
 - sudo apt-get install libeigen3-dev libboost-all-dev
 - Git Clone External Libraries Provided Below
 
-#cd Into:
+cd Into:
+```
 -ROV-code2025
-
-#Run:
+```
+Run:
+```
 -make
 -./a.out
-
+```
  Run The Code
 ## External Libraries to Pull From GitHub
 - lgpio - GPIO Control Library (https://github.com/joan2937/lg)
