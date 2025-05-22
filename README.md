@@ -16,12 +16,12 @@ Install Dependencies:
 - Git Clone External Libraries
 Have proper file setup:
 -rov_project/
-├── main.cpp
-├── pca9685.h
-├── connection.h
-├── matrix.h
-├── thruster.h
-├── CMake
+-├── main.cpp
+-├── pca9685.h
+-├── connection.h
+-├── matrix.h
+-├── thruster.h
+-├── CMake
 - Run The Code
 ## External Libraries to Pull From GitHub
 - lgpio - GPIO Control Library (https://github.com/joan2937/lg)
