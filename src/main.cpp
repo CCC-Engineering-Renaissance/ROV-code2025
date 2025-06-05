@@ -89,16 +89,19 @@ int main(){
 		escs.push_back(esc);
 	}	
 
-	// Prime Thrusters 
+	// Send a rest signal of 1460 Hz to prime thrusters
+	// idk why its not 1500
 	for (int i = 0; i < 8; i++){
 		escs.at(i).setPWM(1460, driver);
 	}
 	usleep(10000);
 
 	// Prime Claw, donald said we cant use a for loop for some reason
+	// The drone motors have to go to the lower limit, upper limit, then rest width to prime.
 	driver.setPWM(8, 1000);
 	driver.setPWM(8, 2000);
 	driver.setPWM(8, 1460);
+	
 	driver.setPWM(9, 1000);
 	driver.setPWM(9, 2000);
 	driver.setPWM(9, 1460);
@@ -111,6 +114,7 @@ int main(){
 	int num;
 	while (1){
 		cin >> num;
+		// Disable thrsuster
 		thrusts.at(num) = !thrusts.at(num);
 	}
 
