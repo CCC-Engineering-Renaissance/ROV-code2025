@@ -15,6 +15,10 @@ struct POVState{
 	float roll = 0.0f;
 	float clawRotate = 0.0f;
 	float clawOpen = 0.0f;
+	float clawPitch = 0.0f;
+	float claw1Open = 0.0f;
+	float angle = 0.0f;
+	bool als = false;
 
 } state;
 
@@ -40,7 +44,8 @@ void server() {
 			std::stringstream ss(msg);
 			
 			// Write Data to the state
-			ss >> state.forward >> state.strafe >> state.vertical >> state.yaw >> state.pitch >> state.roll >> state.clawRotate >> state.clawOpen;
+			ss >> state.forward >> state.strafe >> state.vertical >> state.yaw >> state.pitch >> state.roll >> state.clawRotate >> state.clawOpen
+				>> state.clawPitch >> state.claw1Open >> state.angle >> state.als;
 		}
 	} catch (std::exception& e) {
 		std::cerr << "Server error: " << e.what() << "\n";

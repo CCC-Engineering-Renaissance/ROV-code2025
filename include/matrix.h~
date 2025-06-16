@@ -4,26 +4,24 @@
 Eigen::MatrixXf calcs(float x, float y, float z, float roll, float pitch, float yaw)
 {
 	// Thruster Vectors
-	Eigen::Vector3f T1 = {.5, -.5, 0};
-	Eigen::Vector3f T2 = {0, 0, 1};
-	Eigen::Vector3f T3 = {0, 0, -1};
-	Eigen::Vector3f T4 = {.5, .5, 0};
-	
-	Eigen::Vector3f T5 = {.5, .5, 0};
-	Eigen::Vector3f T6 = {0, 0, -1};
-	Eigen::Vector3f T7 = {0, 0, 1};
-	Eigen::Vector3f T8 = {-.5, .5, 0};
+	Eigen::Vector3f T1 = {1, -1, -1};
+	Eigen::Vector3f T2 = {1, 1, -1};
+	Eigen::Vector3f T3 = {1, -1, 1};
+	Eigen::Vector3f T4 = {1, 1, 1};
+	Eigen::Vector3f T5 = {1, -1, -1};
+	Eigen::Vector3f T6 = {1, 1, -1};
+	Eigen::Vector3f T7 = {-1, -1, 1};
+	Eigen::Vector3f T8 = {-1, 1, 1};
 
 	// Distance Vectors
-	Eigen::Vector3f D1 = {1, 1, 0};
-	Eigen::Vector3f D2 = {.5, 1, 0};
-	Eigen::Vector3f D3 = {-.5, 1, 0};
-	Eigen::Vector3f D4 = {-1, 1, 0};
-
-	Eigen::Vector3f D5 = {1, -1, 0};
-	Eigen::Vector3f D6 = {.5, -1, 0};
-	Eigen::Vector3f D7 = {-.5, -1, 0};
-	Eigen::Vector3f D8 = {-1, -1, 0};
+	Eigen::Vector3f D1 = {1.5, 1, 1};
+	Eigen::Vector3f D2 = {1.5, -1, 1};
+	Eigen::Vector3f D3 = {1.5, 1, -1};
+	Eigen::Vector3f D4 = {1.5, -1, -1};
+	Eigen::Vector3f D5 = {-1.5, 1, 1};
+	Eigen::Vector3f D6 = {-1.5, -1, 1};
+	Eigen::Vector3f D7 = {-1.5, 1, -1};
+	Eigen::Vector3f D8 = {-1.5, -1, -1};
 
 	// Normalize Thrust Vectors
 	T1.normalize();
